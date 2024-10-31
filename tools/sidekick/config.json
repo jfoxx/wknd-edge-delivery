@@ -9,6 +9,12 @@
       "includePaths": [ "**.docx**" ]
     },
     {
+      "id": "sa11y",
+      "title": "Check Accessibility",
+      "environments": [ "preview", "live" ],
+      "event" : "runSa11y"
+    },
+    {
       "id": "asset-library",
       "title": "My Assets",
       "environments": [ "edit" ],
