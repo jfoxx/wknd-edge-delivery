@@ -48,6 +48,52 @@ window.hlx.plugins.add('experimentation', {
   url: '/plugins/experimentation/src/index.js',
 });
 
+async function loadJsFile(url, callback) {
+  const script = document.createElement('script');
+  script.src = url;
+  const head = document.querySelector('head');
+  head.append(script);
+  callback();
+}
+
+function loadCssFile(url) {
+  const link = document.createElement('link');
+  link.href = url;
+  link.rel = 'stylesheet';
+  const head = document.querySelector('head');
+  head.append(link);
+}
+
+/* eslint-disable */
+function setupSa11y() {
+  setTimeout(() => {
+    Sa11y.Lang.addI18n(Sa11yLangEn.strings);
+    const sa11y = new Sa11y.Sa11y({
+      checkRoot: 'main',
+      panelPosition: 'left',
+    });
+  }, '3000');
+}
+
+/* eslint-enable */
+
+const runSa11y = async () => {
+  loadCssFile('https://cdn.jsdelivr.net/gh/ryersondmp/sa11y@3.2.2/dist/css/sa11y.min.css');
+  loadJsFile('https://cdn.jsdelivr.net/combine/gh/ryersondmp/sa11y@3.2.2/dist/js/lang/en.umd.js,gh/ryersondmp/sa11y@3.2.2/dist/js/sa11y.umd.min.js', setupSa11y);
+};
+
+const sk = document.querySelector('helix-sidekick');
+if (sk) {
+  // sidekick already loaded
+  sk.addEventListener('custom:runSa11y', runSa11y);
+} else {
+  // wait for sidekick to be loaded
+  document.addEventListener('sidekick-ready', () => {
+    document.querySelector('helix-sidekick')
+      .addEventListener('custom:runSa11y', runSa11y);
+  }, { once: true });
+}
+
 /**
  * Determine if we are serving content for the block-library, if so don't load the header or footer
  * @returns {boolean} True if we are loading block library content
